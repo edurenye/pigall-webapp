@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1> Live Video Streaming </h1>
+  <div>
+    <img src="{{ url_for('video_feed') }}">
+    <img src="{{ url_for('detect') }}">
+  </div>
+  <div>
+    <script>
+      function image_form_listener() {
+        document.getElementById('save_image_form').addEventListener("submit", function (event) {
+          event.preventDefault();
+          var xmlhttp = new XMLHttpRequest();
+          xmlhttp.open("POST", "save_image", true);
+          xmlhttp.responseType = 'json';
+          xmlhttp.onreadystatechange = function() {
+              if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+                 if (xmlhttp.status == 200) {
+                     document.getElementById('image-form-message').innerHTML = xmlhttp.response.message;
+                 }
+                 else {
+                    alert('There was an error.');
+                 }
+              }
+          };
+          xmlhttp.send();
+        });
+      };
+      function clip_form_listener() {
+        document.getElementById('save_clip_form').addEventListener("submit", function (event) {
+          event.preventDefault();
+          var xmlhttp = new XMLHttpRequest();
+          xmlhttp.open("POST", "save_clip", true);
+          xmlhttp.responseType = 'json';
+          xmlhttp.onreadystatechange = function() {
+              if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+                 if (xmlhttp.status == 200) {
+                     document.getElementById('clip-form-message').innerHTML = xmlhttp.response.message;
+                 }
+                 else {
+                    alert('There was an error.');
+                 }
+              }
+          };
+          xmlhttp.send();
+        });
+      };
+      function docReady(fn) {
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+          setTimeout(fn, 1);
+        } else {
+          document.addEventListener("DOMContentLoaded", fn);
+        }
+      }
+      docReady(image_form_listener);
+      docReady(clip_form_listener);
+    </script>
+    <div>
+      <div>
+        <div id="image-form-message" class="alert alert-message" role="alert"></div>
+        <form id="save_image_form">
+            <input type="submit" value="Save image"/>
+        </form>
+      </div>
+      <div>
+        <div id="clip-form-message" class="alert alert-message" role="alert"></div>
+        <form id="save_clip_form">
+            <input type="submit" value="Save clip"/>
+        </form>
+      </div>
+    </div
+  </div>
+{% endblock %}
